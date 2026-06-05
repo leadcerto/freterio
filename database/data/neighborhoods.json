@@ -1,0 +1,40 @@
+{
+  "Rio de Janeiro": [
+    "Abolição", "Acari", "Anil", "Andaraí", "Bancários", "Bangu", "Barra da Tijuca", "Barra de Guaratiba",
+    "Benfica", "Bento Ribeiro", "Bonsucesso", "Botafogo", "Brás de Pina", "Cachambi", "Cacuia", "Caju",
+    "Camorim", "Campo dos Afonsos", "Campo Grande", "Campinho", "Cascadura", "Catete", "Catumbi",
+    "Cavalcanti", "Centro", "Cidade de Deus", "Cidade Nova", "Cidade Universitária", "Coelho Neto",
+    "Colégio", "Complexo do Alemão", "Copacabana", "Cordovil", "Cosme Velho", "Costa Barros",
+    "Deodoro", "Del Castilho", "Encantado", "Engenheiro Leal", "Engenho da Rainha", "Engenho de Dentro",
+    "Engenho Novo", "Estácio", "Flamengo", "Freguesia (Ilha)", "Freguesia (Jacarepaguá)", "Galeão",
+    "Gamboa", "Gardênia Azul", "Gávea", "Glória", "Grumari", "Guadalupe", "Guaratiba", "Higienópolis",
+    "Honório Gurgel", "Humaitá", "Ilha do Governador", "Inhaúma", "Inhoaíba", "Ipanema",
+    "Irajá", "Itanhangá", "Jacaré", "Jacarepaguá", "Jardim América", "Jardim Botânico",
+    "Jardim Guanabara", "Jardim Sulacap", "Joá", "Lagoa", "Laranjeiras", "Lapa", "Leme",
+    "Madalena", "Madureira", "Magalhães Bastos", "Maracanã", "Maré", "Marechal Hermes",
+    "Mangueira", "Manguinhos", "Méier", "Moneró", "Olaria", "Padre Miguel", "Paciência",
+    "Paquetá", "Parada de Lucas", "Parque Anchieta", "Parque Colúmbia", "Pavuna", "Pedra de Guaratiba",
+    "Penha", "Penha Circular", "Pitangueiras", "Portuguesa", "Praça da Bandeira", "Praia da Bandeira",
+    "Quintino Bocaiúva", "Ramos", "Realengo", "Recreio dos Bandeirantes", "Ricardo de Albuquerque",
+    "Rocinha", "Rocha", "Rocha Miranda", "Rodoviária", "Sampaio", "Santa Cruz", "Santa Teresa",
+    "Santíssimo", "Santo Cristo", "São Conrado", "São Cristóvão", "São Francisco Xavier",
+    "Saúde", "Senador Camará", "Senador Vasconcelos", "Sepetiba", "Taquara", "Tijuca",
+    "Tomás Coelho", "Turiaçu", "Urca", "Vargem Grande", "Vargem Pequena", "Vargens",
+    "Vasco da Gama", "Vidigal", "Vila da Penha", "Vila Isabel", "Vila Kennedy",
+    "Vila Militar", "Vila Valqueire", "Vista Alegre", "Zumbi"
+  ],
+  "Niterói": [
+    "Barreto", "Boa Viagem", "Cachoeiras", "Caramujo", "Centro", "Cubango", "Engenhoca",
+    "Fátima", "Floresta", "Fonseca", "Icaraí", "Ilha da Conceição", "Ingá", "Itaipu",
+    "Itaipuaçu", "Jurujuba", "Largo da Batalha", "Maceió", "Maria Paula", "Maravista",
+    "Muriqui", "Pendotiba", "Piratininga", "Ponta d'Areia", "Santa Bárbara", "Santa Rosa",
+    "Santiago", "São Domingos", "São Francisco", "São Lourenço", "Sapê", "Serra Grande",
+    "Tenente Jardim", "Vital Brazil", "Viçoso Jardim"
+  ],
+  "Nova Iguaçu": [
+    "Austin", "Belford Roxo", "Bom Jardim", "Cabuçu", "Cacuia", "Centro", "Comendador Soares",
+    "Figueiras", "Jardim Alvorada", "Jardim Iguaçu", "Km 32", "Moquetá", "Palhada",
+    "Ponto Chic", "Posse", "Rio Seco", "Rodilândia", "Santa Eugênia", "Tinguá",
+    "Três Corações", "União", "Vila de Cava"
+  ]
+}
