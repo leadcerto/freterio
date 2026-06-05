@@ -245,13 +245,20 @@
     @else
     <div class="divide-y divide-gray-50">
         @foreach($patterns as $pat)
-        <div class="px-6 py-4 {{ $pat->ativo ? '' : 'opacity-50' }}">
+        @php
+            $ex = 'Copacabana';
+            $exSlug = 'copacabana';
+            $vars = ['{bairro}' => $ex, '{slug}' => $exSlug, '{cidade}' => 'Rio de Janeiro', '{uf}' => 'RJ'];
+            $exTitle = str_replace(array_keys($vars), array_values($vars), $pat->title);
+            $exDesc  = str_replace(array_keys($vars), array_values($vars), $pat->description);
+        @endphp
+        <div class="px-6 py-5 {{ $pat->ativo ? '' : 'opacity-50' }}">
 
-            {{-- Linha 1: ordem · rótulo · status + ações --}}
-            <div class="flex items-center justify-between gap-4 mb-2">
+            {{-- Cabeçalho: rótulo + status + ações --}}
+            <div class="flex items-center justify-between gap-4 mb-4">
                 <div class="flex items-center gap-2 min-w-0">
                     <span class="text-xs text-gray-300 font-mono flex-shrink-0">{{ $pat->ordem }}.</span>
-                    <span class="font-semibold text-gray-800 text-sm truncate">{{ $pat->rotulo }}</span>
+                    <span class="font-semibold text-gray-700 text-sm">{{ $pat->rotulo }}</span>
                     <form method="POST" action="{{ route('admin.seo-patterns.toggle', $pat) }}" class="inline flex-shrink-0">
                         @csrf @method('PATCH')
                         <button type="submit"
@@ -274,28 +281,51 @@
                 </div>
             </div>
 
-            {{-- Linha 2: Title --}}
-            <p class="text-xs text-gray-500 font-mono leading-snug mb-1 break-words">
-                <span class="text-gray-300 font-sans mr-1">Title:</span>{{ $pat->title }}
-            </p>
+            {{-- Previews lado a lado --}}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-            {{-- Linha 3: Description --}}
-            <p class="text-xs text-gray-400 leading-snug mb-2 break-words">
-                <span class="text-gray-300 mr-1">Desc:</span>{{ $pat->description }}
-            </p>
+                {{-- Google SERP --}}
+                <div>
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Google</p>
+                    <div class="border border-gray-200 rounded-xl p-4 bg-gray-50">
+                        <p style="font-family:arial,sans-serif;color:#1a0dab;font-size:17px;font-weight:400;line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                            {{ $exTitle }}
+                        </p>
+                        <p style="font-family:arial,sans-serif;color:#006621;font-size:12px;margin:3px 0;">
+                            https://frete.rio.br/frete-mudanca-{{ $exSlug }}
+                        </p>
+                        <p style="font-family:arial,sans-serif;color:#545454;font-size:13px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px;">
+                            {{ $exDesc }}
+                        </p>
+                    </div>
+                </div>
 
-            {{-- Linha 4: og:image --}}
-            @if($pat->og_image)
-            <div class="flex items-center gap-3">
-                <img src="{{ $pat->og_image }}" alt=""
-                     class="h-10 w-20 object-cover rounded border border-gray-200 flex-shrink-0"
-                     onerror="this.style.display='none'">
-                <span class="text-xs text-gray-300 font-mono truncate">{{ $pat->og_image }}</span>
+                {{-- WhatsApp --}}
+                <div>
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">WhatsApp</p>
+                    <div class="border border-gray-200 rounded-xl overflow-hidden bg-white" style="max-width:340px;">
+                        @if($pat->og_image)
+                        <div style="height:160px;background:#e5e7eb;">
+                            <img src="{{ $pat->og_image }}" alt=""
+                                 style="width:100%;height:100%;object-fit:cover;display:block;"
+                                 onerror="this.parentElement.style.display='none'">
+                        </div>
+                        @endif
+                        <div class="p-3 border-l-4" style="border-color:#25D366;">
+                            <p class="font-semibold text-gray-800 text-sm leading-tight mb-1">{{ $exTitle }}</p>
+                            <p class="text-gray-500 text-xs leading-snug mb-1">{{ Str::limit($exDesc, 90) }}</p>
+                            <p class="text-gray-400 text-xs">frete.rio.br</p>
+                        </div>
+                    </div>
+                    @if(! $pat->og_image)
+                    <p class="text-xs text-orange-400 mt-1 flex items-center gap-1">
+                        <span>⚠️</span> Sem og:image — WhatsApp não exibirá imagem
+                    </p>
+                    @endif
+                </div>
             </div>
-            @else
-            <p class="text-xs text-gray-300 italic">Sem og:image</p>
-            @endif
 
+            <p class="text-xs text-gray-300 mt-3">Exemplo com bairro: <em class="text-gray-400">{{ $ex }}</em></p>
         </div>
         @endforeach
     </div>
