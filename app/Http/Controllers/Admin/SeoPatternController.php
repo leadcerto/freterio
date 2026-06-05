@@ -3,15 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Image;
 use App\Models\SeoPattern;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SeoPatternController extends Controller
 {
     public function index()
     {
         $patterns = SeoPattern::orderBy('ordem')->get();
-        return view('admin.seo-patterns.index', compact('patterns'));
+        $images   = Image::active()->get()->map(fn($img) => [
+            'id'    => $img->id,
+            'type'  => $img->type,
+            'url'   => url(Storage::url($img->path)),
+        ])->values();
+        return view('admin.seo-patterns.index', compact('patterns', 'images'));
     }
 
     public function store(Request $request)

@@ -86,11 +86,60 @@
         {{-- og:image --}}
         <div>
             <label class="block text-xs font-semibold text-gray-600 mb-1">og:image</label>
-            <input type="url" name="og_image" id="field-og_image"
-                   placeholder="https://frete.rio.br/images/og-frete-mudanca.jpg"
-                   oninput="updatePreview()" onfocus="lastFocused=this"
-                   class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-            <p class="text-xs text-gray-400 mt-1">JPG ou PNG · 1200×630px · máx. 300KB · URL absoluta (https://)</p>
+            <div class="flex gap-2">
+                <input type="url" name="og_image" id="field-og_image"
+                       placeholder="https://frete.rio.br/..."
+                       oninput="updatePreview()" onfocus="lastFocused=this"
+                       class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+                <button type="button" onclick="openPicker()"
+                        class="px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition whitespace-nowrap">
+                    📂 Biblioteca
+                </button>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">JPG ou PNG · 1200×630px · máx. 300KB · URL absoluta</p>
+
+            {{-- Thumbnail da imagem selecionada --}}
+            <div id="og-thumb-wrap" class="hidden mt-2">
+                <img id="og-thumb" src="" alt="" class="h-16 rounded border border-gray-200 object-cover">
+                <button type="button" onclick="clearOgImage()" class="ml-2 text-xs text-red-400 hover:text-red-600">✕ remover</button>
+            </div>
+        </div>
+
+        {{-- ============ MODAL PICKER ============ --}}
+        <div id="img-picker-modal"
+             class="hidden fixed inset-0 z-50 flex items-center justify-center"
+             style="background:rgba(0,0,0,0.5);">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                    <h3 class="font-bold text-gray-800">Selecionar imagem da biblioteca</h3>
+                    <button type="button" onclick="closePicker()" class="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
+                </div>
+                <div class="p-4 max-h-96 overflow-y-auto">
+                    @if($images->isEmpty())
+                        <p class="text-center text-gray-400 text-sm py-8">Nenhuma imagem cadastrada ainda.</p>
+                    @else
+                        <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                            @foreach($images as $img)
+                            <button type="button"
+                                    onclick="selectImage('{{ $img['url'] }}')"
+                                    class="group relative rounded-xl overflow-hidden border-2 border-transparent hover:border-blue-400 transition focus:outline-none focus:border-blue-500">
+                                <img src="{{ $img['url'] }}" alt="{{ $img['type'] }}"
+                                     class="w-full aspect-video object-cover">
+                                <div class="absolute bottom-0 inset-x-0 bg-black/50 text-white text-xs text-center py-1 opacity-0 group-hover:opacity-100 transition">
+                                    {{ $img['type'] }}
+                                </div>
+                            </button>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+                <div class="px-6 py-3 border-t border-gray-100 text-right">
+                    <button type="button" onclick="closePicker()"
+                            class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-200 rounded-lg hover:border-gray-300 transition">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
         </div>
 
         {{-- Variáveis disponíveis --}}
@@ -324,6 +373,36 @@ function updatePreview() {
         imgEl.src = '';
         noImg.classList.remove('hidden');
     }
+
+    // Thumbnail no formulário
+    updateOgThumb(rawImg);
+}
+
+function updateOgThumb(url) {
+    var wrap  = document.getElementById('og-thumb-wrap');
+    var thumb = document.getElementById('og-thumb');
+    if (url) {
+        thumb.src = url;
+        wrap.classList.remove('hidden');
+    } else {
+        wrap.classList.add('hidden');
+        thumb.src = '';
+    }
+}
+
+function openPicker()  { document.getElementById('img-picker-modal').classList.remove('hidden'); }
+function closePicker() { document.getElementById('img-picker-modal').classList.add('hidden'); }
+
+function selectImage(url) {
+    document.getElementById('field-og_image').value = url;
+    closePicker();
+    updatePreview();
+}
+
+function clearOgImage() {
+    document.getElementById('field-og_image').value = '';
+    updateOgThumb('');
+    updatePreview();
 }
 
 function insertVar(v) {
@@ -351,6 +430,7 @@ function loadEdit(id, rotulo, title, desc, ogImage, ordem, ativo) {
     document.getElementById('field-og_image').value    = ogImage;
     document.getElementById('field-ordem').value       = ordem;
     document.getElementById('field-ativo').checked     = ativo;
+    updateOgThumb(ogImage);
 
     document.getElementById('form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
     updatePreview();
