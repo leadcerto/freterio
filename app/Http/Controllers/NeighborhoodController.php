@@ -50,11 +50,19 @@ class NeighborhoodController extends Controller
                 ?: "Precisa de {$serviceLabel} em {$neighborhood->name}? Orçamento rápido pelo WhatsApp. Avaliação 5 estrelas no Google. Atendemos toda a região.";
         }
 
-        // Fallback: se nenhum padrão de SEO forneceu og_image, usa a imagem destaque do sistema
+        // Por-slug og:image: na primeira visita, clona a imagem destaque com o nome do slug.
+        // Gera uma URL única por página para o WhatsApp cachear corretamente.
         if (! $ogImage) {
-            $destaqueImg = Image::active()->ofType('destaque')->first();
-            if ($destaqueImg) {
-                $ogImage = url(Storage::url($destaqueImg->path));
+            $ogSlugPath = "images/og/{$cleanSlug}.webp";
+            if (! Storage::disk('public')->exists($ogSlugPath)) {
+                $destaqueImg = Image::active()->ofType('destaque')->first();
+                if ($destaqueImg) {
+                    Storage::disk('public')->makeDirectory('images/og');
+                    Storage::disk('public')->copy($destaqueImg->path, $ogSlugPath);
+                }
+            }
+            if (Storage::disk('public')->exists($ogSlugPath)) {
+                $ogImage = url(Storage::url($ogSlugPath));
             }
         }
 
