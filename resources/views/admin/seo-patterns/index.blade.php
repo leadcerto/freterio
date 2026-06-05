@@ -243,68 +243,61 @@
     @if($patterns->isEmpty())
         <p class="text-center text-sm text-gray-400 py-12">Nenhum padrão de SEO cadastrado ainda.</p>
     @else
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="bg-gray-50 border-b border-gray-100 text-xs text-gray-500 uppercase tracking-wide">
-                <tr>
-                    <th class="text-left px-4 py-3 w-8">#</th>
-                    <th class="text-left px-4 py-3">Rótulo</th>
-                    <th class="text-left px-4 py-3">Title</th>
-                    <th class="text-left px-4 py-3">Description</th>
-                    <th class="text-left px-4 py-3">og:image</th>
-                    <th class="text-center px-4 py-3">Status</th>
-                    <th class="text-right px-4 py-3">Ações</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-                @foreach($patterns as $pat)
-                <tr class="{{ $pat->ativo ? '' : 'opacity-50' }}">
-                    <td class="px-4 py-3 text-gray-400 text-xs">{{ $pat->ordem }}</td>
-                    <td class="px-4 py-3 font-medium text-gray-700 max-w-[140px]">
-                        <span class="truncate block" title="{{ $pat->rotulo }}">{{ $pat->rotulo }}</span>
-                    </td>
-                    <td class="px-4 py-3 max-w-[200px]">
-                        <span class="font-mono text-xs text-gray-500 truncate block" title="{{ $pat->title }}">{{ $pat->title }}</span>
-                    </td>
-                    <td class="px-4 py-3 max-w-[200px]">
-                        <span class="text-xs text-gray-400 truncate block" title="{{ $pat->description }}">{{ $pat->description }}</span>
-                    </td>
-                    <td class="px-4 py-3 max-w-[160px]">
-                        @if($pat->og_image)
-                            <a href="{{ $pat->og_image }}" target="_blank" rel="noopener"
-                               class="text-xs text-blue-600 hover:underline truncate block"
-                               title="{{ $pat->og_image }}">
-                                {{ parse_url($pat->og_image, PHP_URL_PATH) }}
-                            </a>
-                        @else
-                            <span class="text-xs text-gray-300 italic">sem imagem</span>
-                        @endif
-                    </td>
-                    <td class="px-4 py-3 text-center">
-                        <form method="POST" action="{{ route('admin.seo-patterns.toggle', $pat) }}" class="inline">
-                            @csrf @method('PATCH')
-                            <button type="submit"
-                                    class="text-xs px-2 py-1 rounded-full transition {{ $pat->ativo ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
-                                {{ $pat->ativo ? 'Ativo' : 'Inativo' }}
-                            </button>
-                        </form>
-                    </td>
-                    <td class="px-4 py-3 text-right space-x-3 whitespace-nowrap">
-                        <button type="button"
-                                onclick="loadEdit({{ $pat->id }}, {{ json_encode($pat->rotulo) }}, {{ json_encode($pat->title) }}, {{ json_encode($pat->description) }}, {{ json_encode($pat->og_image ?? '') }}, {{ $pat->ordem }}, {{ $pat->ativo ? 'true' : 'false' }})"
-                                class="text-xs text-blue-500 hover:text-blue-700 hover:underline">
-                            Editar
+    <div class="divide-y divide-gray-50">
+        @foreach($patterns as $pat)
+        <div class="px-6 py-4 {{ $pat->ativo ? '' : 'opacity-50' }}">
+
+            {{-- Linha 1: ordem · rótulo · status + ações --}}
+            <div class="flex items-center justify-between gap-4 mb-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-xs text-gray-300 font-mono flex-shrink-0">{{ $pat->ordem }}.</span>
+                    <span class="font-semibold text-gray-800 text-sm truncate">{{ $pat->rotulo }}</span>
+                    <form method="POST" action="{{ route('admin.seo-patterns.toggle', $pat) }}" class="inline flex-shrink-0">
+                        @csrf @method('PATCH')
+                        <button type="submit"
+                                class="text-xs px-2 py-0.5 rounded-full transition {{ $pat->ativo ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
+                            {{ $pat->ativo ? 'Ativo' : 'Inativo' }}
                         </button>
-                        <form method="POST" action="{{ route('admin.seo-patterns.destroy', $pat) }}"
-                              class="inline" onsubmit="return confirm('Remover este padrão de SEO? Os padrões de link vinculados perderão o SEO configurado.')">
-                            @csrf @method('DELETE')
-                            <button class="text-xs text-red-400 hover:text-red-600 hover:underline">Remover</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                    </form>
+                </div>
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <button type="button"
+                            onclick="loadEdit({{ $pat->id }}, {{ json_encode($pat->rotulo) }}, {{ json_encode($pat->title) }}, {{ json_encode($pat->description) }}, {{ json_encode($pat->og_image ?? '') }}, {{ $pat->ordem }}, {{ $pat->ativo ? 'true' : 'false' }})"
+                            class="text-xs text-blue-500 hover:text-blue-700 hover:underline">
+                        Editar
+                    </button>
+                    <form method="POST" action="{{ route('admin.seo-patterns.destroy', $pat) }}"
+                          class="inline" onsubmit="return confirm('Remover este padrão de SEO?')">
+                        @csrf @method('DELETE')
+                        <button class="text-xs text-red-400 hover:text-red-600 hover:underline">Remover</button>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Linha 2: Title --}}
+            <p class="text-xs text-gray-500 font-mono leading-snug mb-1 break-words">
+                <span class="text-gray-300 font-sans mr-1">Title:</span>{{ $pat->title }}
+            </p>
+
+            {{-- Linha 3: Description --}}
+            <p class="text-xs text-gray-400 leading-snug mb-2 break-words">
+                <span class="text-gray-300 mr-1">Desc:</span>{{ $pat->description }}
+            </p>
+
+            {{-- Linha 4: og:image --}}
+            @if($pat->og_image)
+            <div class="flex items-center gap-3">
+                <img src="{{ $pat->og_image }}" alt=""
+                     class="h-10 w-20 object-cover rounded border border-gray-200 flex-shrink-0"
+                     onerror="this.style.display='none'">
+                <span class="text-xs text-gray-300 font-mono truncate">{{ $pat->og_image }}</span>
+            </div>
+            @else
+            <p class="text-xs text-gray-300 italic">Sem og:image</p>
+            @endif
+
+        </div>
+        @endforeach
     </div>
     @endif
 </div>
