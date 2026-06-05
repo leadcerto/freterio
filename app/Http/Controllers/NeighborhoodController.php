@@ -8,6 +8,7 @@ use App\Models\GoogleReview;
 use App\Models\Image;
 use App\Models\Neighborhood;
 use App\Models\UrlPattern;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class NeighborhoodController extends Controller
@@ -47,6 +48,14 @@ class NeighborhoodController extends Controller
             $metaTitle       = $neighborhood->meta_title ?: "{$h1} | Frete Rio";
             $metaDescription = $neighborhood->meta_description
                 ?: "Precisa de {$serviceLabel} em {$neighborhood->name}? Orçamento rápido pelo WhatsApp. Avaliação 5 estrelas no Google. Atendemos toda a região.";
+        }
+
+        // Fallback: se nenhum padrão de SEO forneceu og_image, usa a imagem destaque do sistema
+        if (! $ogImage) {
+            $destaqueImg = Image::active()->ofType('destaque')->first();
+            if ($destaqueImg) {
+                $ogImage = url(Storage::url($destaqueImg->path));
+            }
         }
 
         // Bairros para linkificação (mesma cidade, exceto o atual)
