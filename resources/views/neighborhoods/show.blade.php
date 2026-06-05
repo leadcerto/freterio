@@ -17,6 +17,42 @@
 @endif
 
 @push('head')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Frete Rio",
+      "item": "https://frete.rio.br"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ e($neighborhood->name) }}",
+      "item": "{{ url()->current() }}"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "{{ url()->current() }}#service",
+  "name": "{{ e($h1) }}",
+  "provider": { "@id": "https://frete.rio.br/#business" },
+  "serviceType": "{{ e($serviceLabel) }}",
+  "areaServed": {
+    "@type": "Place",
+    "name": "{{ e($neighborhood->name) }}, Rio de Janeiro, RJ"
+  },
+  "url": "{{ url()->current() }}",
+  "description": "{{ e($metaDescription) }}"
+}
+</script>
 @verbatim
 <script type="application/ld+json">
 {

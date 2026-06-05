@@ -32,6 +32,45 @@
         details[open] .chevron { transform: rotate(180deg); }
         .chevron { transition: transform .2s ease; }
     </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "LocalBusiness",
+          "@id": "https://frete.rio.br/#business",
+          "name": "Frete Rio",
+          "alternateName": "Frete e Mudança Rio de Janeiro",
+          "url": "https://frete.rio.br",
+          "telephone": "+5521981813106",
+          "description": "Empresa de fretes e mudanças no Rio de Janeiro com avaliação 5 estrelas no Google. Orçamento rápido pelo WhatsApp.",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Rio de Janeiro",
+            "addressRegion": "RJ",
+            "addressCountry": "BR"
+          },
+          "areaServed": { "@type": "City", "name": "Rio de Janeiro" },
+          "priceRange": "$$",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+55-21-98181-3106",
+            "contactType": "customer service",
+            "availableLanguage": "Portuguese"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://frete.rio.br/#website",
+          "url": "https://frete.rio.br",
+          "name": "Frete Rio",
+          "description": "Fretes e Mudanças no Rio de Janeiro",
+          "publisher": { "@id": "https://frete.rio.br/#business" },
+          "inLanguage": "pt-BR"
+        }
+      ]
+    }
+    </script>
     @stack('head_styles')
 </head>
 <body class="bg-white text-gray-800 antialiased">

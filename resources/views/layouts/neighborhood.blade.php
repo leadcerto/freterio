@@ -22,6 +22,46 @@
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"></noscript>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "LocalBusiness",
+          "@id": "https://frete.rio.br/#business",
+          "name": "Frete Rio",
+          "alternateName": "Frete e Mudança Rio de Janeiro",
+          "url": "https://frete.rio.br",
+          "telephone": "+5521981813106",
+          "description": "Empresa de fretes e mudanças no Rio de Janeiro com avaliação 5 estrelas no Google. Orçamento rápido pelo WhatsApp.",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Rio de Janeiro",
+            "addressRegion": "RJ",
+            "addressCountry": "BR"
+          },
+          "areaServed": { "@type": "City", "name": "Rio de Janeiro" },
+          "priceRange": "$$",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+55-21-98181-3106",
+            "contactType": "customer service",
+            "availableLanguage": "Portuguese",
+            "contactOption": "TollFree"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://frete.rio.br/#website",
+          "url": "https://frete.rio.br",
+          "name": "Frete Rio",
+          "description": "Fretes e Mudanças no Rio de Janeiro",
+          "publisher": { "@id": "https://frete.rio.br/#business" },
+          "inLanguage": "pt-BR"
+        }
+      ]
+    }
+    </script>
     @stack('head')
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
