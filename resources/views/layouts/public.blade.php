@@ -102,11 +102,13 @@
         <div class="max-w-6xl mx-auto px-4 text-center text-sm">
             <p class="font-bold text-white text-base mb-1">Frete Rio — Fretes e Mudanças no Rio de Janeiro</p>
             <p>WhatsApp: <a href="tel:+5521981813106" class="hover:text-white transition">(21) 98181-3106</a></p>
-            <p class="mt-3 text-xs text-gray-500">
-                © {{ date('Y') }} Frete Rio. Todos os direitos reservados.
-                &nbsp;·&nbsp;
-                <a href="{{ route('privacy') }}" target="_blank" rel="noopener" class="hover:text-white transition">Política de Privacidade</a>
-            </p>
+            <div class="flex flex-wrap justify-center gap-4 mt-3 text-xs text-gray-400">
+                <a href="{{ route('frota') }}" class="hover:text-white transition">Nossa Frota</a>
+                <a href="{{ route('depoimentos') }}" class="hover:text-white transition">Depoimentos</a>
+                <a href="{{ route('contato') }}" class="hover:text-white transition">Fale Conosco</a>
+                <a href="{{ route('privacy') }}" class="hover:text-white transition">Política de Privacidade</a>
+            </div>
+            <p class="mt-2 text-xs text-gray-500">© {{ date('Y') }} Frete Rio. Todos os direitos reservados.</p>
         </div>
     </footer>
 

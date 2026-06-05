@@ -83,10 +83,14 @@
     <!-- RODAPÉ MÍNIMO -->
     <footer style="background: rgba(0,0,0,0.25); padding: 16px 16px 260px; text-align: center; margin-top: 40px;">
         <p style="color: rgba(255,255,255,0.85); font-size: 12px;">
-            © {{ date('Y') }} Frete Rio — Fretes e Mudanças no Rio de Janeiro &nbsp;·&nbsp;
-            <a href="{{ route('home') }}" style="color: rgba(255,255,255,0.8); text-decoration:none;">Início</a>
-            &nbsp;·&nbsp;
-            <a href="{{ route('privacy') }}" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.8); text-decoration:none;">Política de Privacidade</a>
+            © {{ date('Y') }} Frete Rio — Fretes e Mudanças no Rio de Janeiro
+        </p>
+        <p style="margin-top:6px; font-size:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:12px;">
+            <a href="{{ route('home') }}" style="color:rgba(255,255,255,0.7);text-decoration:none;">Início</a>
+            <a href="{{ route('frota') }}" style="color:rgba(255,255,255,0.7);text-decoration:none;">Nossa Frota</a>
+            <a href="{{ route('depoimentos') }}" style="color:rgba(255,255,255,0.7);text-decoration:none;">Depoimentos</a>
+            <a href="{{ route('contato') }}" style="color:rgba(255,255,255,0.7);text-decoration:none;">Fale Conosco</a>
+            <a href="{{ route('privacy') }}" style="color:rgba(255,255,255,0.7);text-decoration:none;">Privacidade</a>
         </p>
     </footer>
 

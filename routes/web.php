@@ -87,6 +87,22 @@ require __DIR__.'/auth.php';
 // Política de Privacidade
 Route::get('/politica-de-privacidade', fn() => view('politica-privacidade'))->name('privacy');
 
+// Páginas estáticas institucionais
+Route::get('/nossa-frota', function () {
+    $veiculos = collect(range(1, 5))->map(fn($n) => [
+        'num' => $n,
+        'img' => \App\Models\Image::active()->ofType("veiculo_{$n}")->first(),
+    ]);
+    return view('pages.nossa-frota', compact('veiculos'));
+})->name('frota');
+
+Route::get('/depoimentos', function () {
+    $reviews = \App\Models\GoogleReview::highRated()->orderByDesc('rating')->orderByDesc('time')->get();
+    return view('pages.depoimentos', compact('reviews'));
+})->name('depoimentos');
+
+Route::get('/fale-conosco', fn() => view('pages.fale-conosco'))->name('contato');
+
 // Rota catch-all — DEVE ser a última rota do arquivo
 Route::get('/{slug}', [NeighborhoodController::class, 'show'])
     ->where('slug', '[a-z0-9\-\_]+')
