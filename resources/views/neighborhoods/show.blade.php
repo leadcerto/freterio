@@ -4,6 +4,35 @@
 @section('meta_description', $metaDescription)
 @section('canonical', url()->current())
 
+@if($ogImage)
+@push('og_meta')
+<meta property="og:image" content="{{ $ogImage }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $metaTitle }}">
+<meta name="twitter:description" content="{{ $metaDescription }}">
+<meta name="twitter:image" content="{{ $ogImage }}">
+@endpush
+@endif
+
+@push('head')
+@verbatim
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "Frete e Mudança no Rio de Janeiro — Frete Rio",
+  "description": "Conheça os serviços de frete, mudança e transporte da Frete Rio no Rio de Janeiro. Equipe profissional, pontual e com avaliação 5 estrelas no Google.",
+  "thumbnailUrl": "https://i.ytimg.com/vi/RIYUmJ6oLa8/maxresdefault.jpg",
+  "uploadDate": "2024-03-26",
+  "embedUrl": "https://www.youtube.com/embed/RIYUmJ6oLa8",
+  "contentUrl": "https://www.youtube.com/watch?v=RIYUmJ6oLa8"
+}
+</script>
+@endverbatim
+@endpush
+
 @section('content')
 
 {{-- ============================================================ --}}
@@ -12,7 +41,7 @@
 <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 10px 16px 120px; text-align: center; position: relative;">
 
     {{-- Nome do bairro — topo esquerdo, pequeno --}}
-    <p style="width: 100%; text-align: left; color: rgba(0,0,0,0.55); font-size: 12px; margin-bottom: 10px; padding: 0 4px;">
+    <p style="width: 100%; text-align: left; color: rgba(0,0,0,0.75); font-size: 12px; margin-bottom: 10px; padding: 0 4px;">
         {{ $neighborhood->name }}
     </p>
 
@@ -32,6 +61,8 @@
         <img src="{{ Storage::url($fleetImage->path) }}"
              alt="Frota de veículos para {{ $serviceLabel }} em {{ $neighborhood->name }}"
              title="{{ $h1 }} — Frete Rio"
+             fetchpriority="high"
+             decoding="async"
              style="width: 100%; max-width: 600px; height: auto; margin: 0 auto; display: block; object-fit: contain; flex: 1;">
     @else
         {{-- Placeholder: 5 veículos numerados em vermelho --}}
@@ -180,6 +211,7 @@ $veiculos = [
                 {{-- Botão --}}
                 <a href="https://api.whatsapp.com/send?phone=55{{ $whatsapp }}&text={{ urlencode($v['msg']) }}"
                    target="_blank" rel="noopener"
+                   onclick="gtag('event','whatsapp_click',{'button':'veiculo_'+{{ $loop->index + 1 }},'page':window.location.pathname})"
                    style="display:inline-block; background:#c47b00; color:#fff; font-size:12px; font-weight:800; letter-spacing:.8px; padding:10px 18px; border-radius:6px; text-decoration:none; text-transform:uppercase;">
                     Solicite um Orçamento
                 </a>
@@ -231,7 +263,7 @@ $veiculos = [
 
 {{-- DEPOIMENTOS DO GOOGLE --}}
 @if($reviews->count())
-<section style="padding: 60px 20px; background: rgba(0,0,0,0.15);">
+<section id="secao-avaliacoes" style="padding: 60px 20px; background: rgba(0,0,0,0.15);">
     <div style="max-width: 960px; margin: 0 auto;">
 
         <p style="text-align:center; color:#fff; font-weight:700; font-size:16px; margin-bottom:6px; letter-spacing:.5px;">
@@ -250,6 +282,9 @@ $veiculos = [
                     @if($review->profile_photo_url)
                         <img src="{{ $review->profile_photo_url }}"
                              alt="{{ $review->author_name }}"
+                             loading="lazy"
+                             decoding="async"
+                             width="42" height="42"
                              style="width:42px; height:42px; border-radius:50%; object-fit:cover; flex-shrink:0;">
                     @else
                         <div style="width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:16px; flex-shrink:0;">
@@ -258,7 +293,7 @@ $veiculos = [
                     @endif
                     <div>
                         <p style="color:#fff; font-weight:600; font-size:13px; margin:0;">{{ $review->author_name }}</p>
-                        <p style="color:rgba(255,255,255,0.5); font-size:11px; margin:2px 0 0;">
+                        <p style="color:rgba(255,255,255,0.75); font-size:11px; margin:2px 0 0;">
                             {{ $review->profile_name }} · {{ $review->relative_time_description }}
                         </p>
                     </div>
@@ -368,15 +403,20 @@ $veiculos = [
                 </p>
             </div>
 
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px;">
-                <iframe
-                    src="https://www.youtube.com/embed/RIYUmJ6oLa8"
-                    title="Personal Organizer — Frete Rio"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                    style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:12px;">
-                </iframe>
+            <div id="yt-facade"
+                 style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; cursor: pointer; background:#000;"
+                 onclick="gtag('event','youtube_play',{'video':'Personal Organizer — Frete Rio','page':window.location.pathname});this.innerHTML='<iframe src=\'https://www.youtube.com/embed/RIYUmJ6oLa8?autoplay=1\' title=\'Personal Organizer — Frete Rio\' frameborder=\'0\' allow=\'autoplay; encrypted-media; picture-in-picture\' allowfullscreen style=\'position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;\'></iframe>'"
+                 aria-label="Assistir vídeo: Personal Organizer — Frete Rio"
+                 role="button"
+                 tabindex="0">
+                <img src="https://i.ytimg.com/vi/RIYUmJ6oLa8/maxresdefault.jpg"
+                     alt="Personal Organizer — Frete Rio: clique para assistir"
+                     loading="lazy"
+                     decoding="async"
+                     style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; border-radius:12px;">
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:64px; height:44px; background:#ff0000; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(0,0,0,.5);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                </div>
             </div>
 
         </div>
@@ -499,5 +539,30 @@ $faqsDetalhado = [
         @endforeach
     </div>
 </section>
+
+<script>
+// Scroll até avaliações
+(function(){
+    var el = document.getElementById('secao-avaliacoes');
+    if (!el) return;
+    var fired = false;
+    new IntersectionObserver(function(entries){
+        if (!fired && entries[0].isIntersecting) {
+            fired = true;
+            gtag('event','scroll_avaliacoes',{'page':window.location.pathname});
+        }
+    }, {threshold: 0.3}).observe(el);
+})();
+
+// FAQ aberto
+document.querySelectorAll('details').forEach(function(d){
+    d.addEventListener('toggle', function(){
+        if (d.open) {
+            var q = d.querySelector('summary');
+            gtag('event','faq_aberto',{'pergunta': q ? q.textContent.trim() : '','page':window.location.pathname});
+        }
+    });
+});
+</script>
 
 @endsection

@@ -16,6 +16,8 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_BR">
     <meta name="google-site-verification" content="IfQzZfmpFI4veIrf0cPXRHLV7N1fvu1RokB8f-p3xq0">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YS5SLJYQQ3"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YS5SLJYQQ3');</script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,7 +63,11 @@
         <div class="max-w-6xl mx-auto px-4 text-center text-sm">
             <p class="font-bold text-white text-base mb-1">Frete Rio — Fretes e Mudanças no Rio de Janeiro</p>
             <p>WhatsApp: <a href="tel:+5521981813106" class="hover:text-white transition">(21) 98181-3106</a></p>
-            <p class="mt-3 text-xs text-gray-500">© {{ date('Y') }} Frete Rio. Todos os direitos reservados.</p>
+            <p class="mt-3 text-xs text-gray-500">
+                © {{ date('Y') }} Frete Rio. Todos os direitos reservados.
+                &nbsp;·&nbsp;
+                <a href="{{ route('privacy') }}" target="_blank" rel="noopener" class="hover:text-white transition">Política de Privacidade</a>
+            </p>
         </div>
     </footer>
 

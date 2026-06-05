@@ -12,11 +12,17 @@
     <meta property="og:description" content="@yield('meta_description')">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_BR">
+    <meta property="og:url" content="{{ url()->current() }}">
+    @stack('og_meta')
     <meta name="google-site-verification" content="IfQzZfmpFI4veIrf0cPXRHLV7N1fvu1RokB8f-p3xq0">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YS5SLJYQQ3"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YS5SLJYQQ3');</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"></noscript>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('head')
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -30,13 +36,17 @@
 </head>
 <body>
 
-    @yield('content')
+    <main>
+        @yield('content')
+    </main>
 
     <!-- RODAPÉ MÍNIMO -->
     <footer style="background: rgba(0,0,0,0.25); padding: 16px 16px 260px; text-align: center; margin-top: 40px;">
-        <p style="color: rgba(255,255,255,0.55); font-size: 12px;">
+        <p style="color: rgba(255,255,255,0.85); font-size: 12px;">
             © {{ date('Y') }} Frete Rio — Fretes e Mudanças no Rio de Janeiro &nbsp;·&nbsp;
-            <a href="{{ route('home') }}" style="color: rgba(255,255,255,0.5); text-decoration:none;">Início</a>
+            <a href="{{ route('home') }}" style="color: rgba(255,255,255,0.8); text-decoration:none;">Início</a>
+            &nbsp;·&nbsp;
+            <a href="{{ route('privacy') }}" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.8); text-decoration:none;">Política de Privacidade</a>
         </p>
     </footer>
 
@@ -46,14 +56,18 @@
         <a href="https://wa.me/55{{ $whatsapp ?? '21981813106' }}?text={{ $waMessage ?? urlencode('Olá, gostaria de um orçamento de frete!') }}"
            target="_blank" rel="noopener"
            aria-label="Orçamento pelo WhatsApp"
+           onclick="gtag('event','whatsapp_click',{'button':'flutuante','page':window.location.pathname})"
            style="position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:9999; display:block;">
             <img src="{{ Storage::url($waImg->path) }}"
                  alt="Orçamento Rápido pelo WhatsApp — Clique Aqui"
+                 loading="lazy"
+                 decoding="async"
                  style="width:320px; max-width:90vw; height:auto; display:block; filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));">
         </a>
     @else
         <a href="https://wa.me/55{{ $whatsapp ?? '21981813106' }}?text={{ $waMessage ?? urlencode('Olá, gostaria de um orçamento de frete!') }}"
            target="_blank" rel="noopener"
+           onclick="gtag('event','whatsapp_click',{'button':'flutuante','page':window.location.pathname})"
            style="position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:9999;
                   display:inline-flex; align-items:center; gap:10px;
                   background:#000; color:#fff;

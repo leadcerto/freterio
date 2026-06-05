@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UrlPattern extends Model
 {
-    protected $fillable = ['prefix', 'suffix', 'label', 'is_active', 'order'];
+    protected $fillable = ['prefix', 'suffix', 'label', 'is_active', 'order', 'seo_pattern_id'];
 
     protected function casts(): array
     {
@@ -16,6 +16,11 @@ class UrlPattern extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    public function seoPattern()
+    {
+        return $this->belongsTo(SeoPattern::class);
     }
 
     /**
@@ -35,5 +40,11 @@ class UrlPattern extends Model
     public function buildUrl(string $neighborhoodSlug): string
     {
         return '/' . $this->buildSlug($neighborhoodSlug);
+    }
+
+    public function toTemplate(): string
+    {
+        $parts = array_filter([$this->prefix, '{bairro}', $this->suffix], fn($p) => $p !== '');
+        return implode('-', $parts);
     }
 }

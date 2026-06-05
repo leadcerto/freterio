@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Neighborhood;
+use App\Models\SeoPattern;
 use App\Models\UrlPattern;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -12,32 +13,31 @@ class UrlPatternController extends Controller
 {
     public function index(Request $request)
     {
-        $patterns = UrlPattern::orderBy('order')->get();
+        $patterns = UrlPattern::with('seoPattern')->orderBy('order')->get();
 
-        // Preview: gera todos os links para um bairro de exemplo
-        $previewSlug = $request->get('preview', 'copacabana');
+        $previewSlug = $request->input('preview', 'copacabana');
         $previewNeighborhood = Neighborhood::active()->where('slug', $previewSlug)->first()
             ?? Neighborhood::active()->first();
 
-        return view('admin.url-patterns.index', compact('patterns', 'previewNeighborhood'));
+        $seoPatterns = SeoPattern::ativo()->orderBy('ordem')->get();
+
+        return view('admin.url-patterns.index', compact('patterns', 'previewNeighborhood', 'seoPatterns'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'prefix'    => 'nullable|string|max:100',
-            'suffix'    => 'nullable|string|max:100',
-            'label'     => 'required|string|max:100',
-            'order'     => 'required|integer|min:0',
-            'is_active' => 'boolean',
+        $request->validate([
+            'url_template' => 'required|string|max:200',
+            'label'        => 'required|string|max:100',
+            'order'        => 'required|integer|min:0',
         ]);
 
-        $data['prefix']    = $data['prefix'] ?? '';
-        $data['suffix']    = $data['suffix'] ?? '';
+        $data = $this->parseTemplate($request->input('url_template'));
+        $data['label']     = $request->input('label');
+        $data['order']     = $request->input('order');
         $data['is_active'] = $request->boolean('is_active', true);
 
         UrlPattern::create($data);
-
         Cache::forget('url_patterns_active');
 
         return back()->with('success', 'Padrão de link criado!');
@@ -45,20 +45,48 @@ class UrlPatternController extends Controller
 
     public function update(Request $request, UrlPattern $urlPattern)
     {
-        $data = $request->validate([
-            'prefix'    => 'nullable|string|max:100',
-            'suffix'    => 'nullable|string|max:100',
-            'label'     => 'required|string|max:100',
-            'order'     => 'required|integer|min:0',
+        $request->validate([
+            'url_template' => 'required|string|max:200',
+            'label'        => 'required|string|max:100',
+            'order'        => 'required|integer|min:0',
         ]);
 
-        $data['prefix'] = $data['prefix'] ?? '';
-        $data['suffix'] = $data['suffix'] ?? '';
-        $urlPattern->update($data);
+        $data = $this->parseTemplate($request->input('url_template'));
+        $data['label'] = $request->input('label');
+        $data['order'] = $request->input('order');
 
+        $urlPattern->update($data);
         Cache::forget('url_patterns_active');
 
         return back()->with('success', 'Padrão atualizado!');
+    }
+
+    private function parseTemplate(string $template): array
+    {
+        $template = trim($template, '/ ');
+        $template = str_replace('{slug}', '{bairro}', $template);
+
+        if (str_contains($template, '{bairro}')) {
+            [$before, $after] = explode('{bairro}', $template, 2);
+            return [
+                'prefix' => rtrim($before, '-'),
+                'suffix' => ltrim($after, '-'),
+            ];
+        }
+
+        return ['prefix' => $template, 'suffix' => ''];
+    }
+
+    public function assignSeo(Request $request, UrlPattern $urlPattern)
+    {
+        $data = $request->validate([
+            'seo_pattern_id' => 'nullable|exists:seo_patterns,id',
+        ]);
+
+        $urlPattern->update(['seo_pattern_id' => $data['seo_pattern_id'] ?: null]);
+        Cache::forget('url_patterns_active');
+
+        return back()->with('success', 'Vínculo de SEO salvo!');
     }
 
     public function toggle(UrlPattern $urlPattern)

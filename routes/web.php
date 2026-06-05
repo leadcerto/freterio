@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NeighborhoodController as AdminNeighborhoodController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\ImageController;
+use App\Http\Controllers\Admin\SeoPatternController;
 use App\Http\Controllers\Admin\UrlPatternController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -65,7 +66,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::post('/links', [UrlPatternController::class, 'store'])->name('url-patterns.store');
     Route::put('/links/{urlPattern}', [UrlPatternController::class, 'update'])->name('url-patterns.update');
     Route::patch('/links/{urlPattern}/toggle', [UrlPatternController::class, 'toggle'])->name('url-patterns.toggle');
+    Route::patch('/links/{urlPattern}/seo', [UrlPatternController::class, 'assignSeo'])->name('url-patterns.assign-seo');
     Route::delete('/links/{urlPattern}', [UrlPatternController::class, 'destroy'])->name('url-patterns.destroy');
+
+    // Padrões de SEO
+    Route::get('/seo-patterns', [SeoPatternController::class, 'index'])->name('seo-patterns.index');
+    Route::post('/seo-patterns', [SeoPatternController::class, 'store'])->name('seo-patterns.store');
+    Route::put('/seo-patterns/{seoPattern}', [SeoPatternController::class, 'update'])->name('seo-patterns.update');
+    Route::patch('/seo-patterns/{seoPattern}/toggle', [SeoPatternController::class, 'toggle'])->name('seo-patterns.toggle');
+    Route::delete('/seo-patterns/{seoPattern}', [SeoPatternController::class, 'destroy'])->name('seo-patterns.destroy');
 
     // Perfil (Breeze)
     Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -74,6 +83,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 });
 
 require __DIR__.'/auth.php';
+
+// Política de Privacidade
+Route::get('/politica-de-privacidade', fn() => view('politica-privacidade'))->name('privacy');
 
 // Rota catch-all — DEVE ser a última rota do arquivo
 Route::get('/{slug}', [NeighborhoodController::class, 'show'])

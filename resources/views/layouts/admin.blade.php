@@ -35,6 +35,9 @@
             <a href="{{ route('admin.url-patterns.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-700 transition {{ request()->routeIs('admin.url-patterns.*') ? 'bg-blue-700 font-semibold' : '' }}">
                 🔗 Padrões de Link
             </a>
+            <a href="{{ route('admin.seo-patterns.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-700 transition {{ request()->routeIs('admin.seo-patterns.*') ? 'bg-blue-700 font-semibold' : '' }}">
+                🎯 Padrões de SEO
+            </a>
         </nav>
         <div class="px-4 py-4 border-t border-blue-700">
             <p class="text-xs text-blue-200 mb-1">{{ auth()->user()->name }}</p>

@@ -26,11 +26,28 @@ class NeighborhoodController extends Controller
             abort(404);
         }
 
-        $serviceLabel    = $pattern?->label ?? 'Frete';
-        $h1              = "{$serviceLabel} em {$neighborhood->name}";
-        $metaTitle       = $neighborhood->meta_title ?: "{$h1} | Frete Rio";
-        $metaDescription = $neighborhood->meta_description
-            ?: "Precisa de {$serviceLabel} em {$neighborhood->name}? Orçamento rápido pelo WhatsApp. Avaliação 5 estrelas no Google. Atendemos toda a região.";
+        $serviceLabel = $pattern?->label ?? 'Frete';
+        $h1           = "{$serviceLabel} em {$neighborhood->name}";
+
+        $seoPattern = $pattern?->seoPattern;
+        $ogImage    = null;
+
+        if ($seoPattern && $seoPattern->ativo) {
+            $seoVars = [
+                'bairro' => $neighborhood->name,
+                'slug'   => $neighborhood->slug,
+                'cidade' => $neighborhood->city,
+                'uf'     => $neighborhood->state ?? 'RJ',
+            ];
+            $resolved        = $seoPattern->resolve($seoVars);
+            $metaTitle       = $resolved['title'];
+            $metaDescription = $resolved['description'];
+            $ogImage         = $resolved['og_image'];
+        } else {
+            $metaTitle       = $neighborhood->meta_title ?: "{$h1} | Frete Rio";
+            $metaDescription = $neighborhood->meta_description
+                ?: "Precisa de {$serviceLabel} em {$neighborhood->name}? Orçamento rápido pelo WhatsApp. Avaliação 5 estrelas no Google. Atendemos toda a região.";
+        }
 
         // Bairros para linkificação (mesma cidade, exceto o atual)
         $allNeighborhoods = Neighborhood::active()
@@ -63,7 +80,7 @@ class NeighborhoodController extends Controller
 
         return view('neighborhoods.show', compact(
             'neighborhood', 'serviceLabel', 'h1',
-            'metaTitle', 'metaDescription',
+            'metaTitle', 'metaDescription', 'ogImage',
             'faqs', 'neighborhoodTexts', 'hasNeighborhoodInfo',
             'fleetImage', 'hasDestaque', 'hasWhatsappImg', 'pageSlug',
             'whatsapp', 'waMessage', 'reviews'
@@ -73,6 +90,7 @@ class NeighborhoodController extends Controller
     private function loadPatterns()
     {
         return UrlPattern::active()
+            ->with('seoPattern')
             ->orderByRaw('LENGTH(prefix) DESC')
             ->orderBy('order')
             ->get();
